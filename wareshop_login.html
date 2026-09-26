@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora Warehouse - Manga Login</title>
+    <style>
+        /* === MANGA BASE STYLES === */
+        body {
+            margin: 0;
+            padding: 0;
+            /* Deep tech background */
+            background-color: #1a1a24;
+            background-image: repeating-linear-gradient(45deg, #111 0, #111 2px, #1a1a24 2px, #1a1a24 15px);
+            font-family: 'Impact', 'Trebuchet MS', sans-serif;
+            text-transform: uppercase;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: #000;
+        }
+
+        /* === LOGIN CONTAINER (Manga Spread Style) === */
+        .login-container {
+            display: flex;
+            width: 950px;
+            height: 600px;
+            background: #fff;
+            border: 8px solid #000;
+            box-shadow: 35px 35px 0 rgba(0,0,0,0.8), 0 0 50px rgba(255, 0, 60, 0.3);
+            transform: rotate(-2deg); /* Dynamic Manga Tilt! */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .login-container:hover {
+            transform: rotate(0deg) scale(1.02);
+        }
+
+        /* === LEFT PANEL: MANGA ART === */
+        .panel-art {
+            flex: 1.2;
+            border-right: 8px solid #000;
+            /* Dynamic Red Sunburst */
+            background-color: #ff003c;
+            background-image: repeating-conic-gradient(from 0deg, #ff003c 0deg, #ff003c 6deg, #cc0030 6deg, #cc0030 12deg);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 1;
+        }
+
+        /* Manga Screentone Overlay on Art */
+        .panel-art::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(#000 25%, transparent 25%);
+            background-size: 6px 6px;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .art-title {
+            background: #ffe600;
+            border: 5px solid #000;
+            padding: 5px 15px;
+            font-size: 30px;
+            box-shadow: 6px 6px 0 #000;
+            margin-bottom: 30px;
+            transform: skew(-10deg);
+        }
+
+        .art-danger {
+            background: #000;
+            color: #fff;
+            font-size: 70px;
+            line-height: 0.9;
+            padding: 20px;
+            border: 8px solid #fff;
+            box-shadow: 12px 12px 0 #000;
+            transform: rotate(-5deg);
+        }
+
+        .sfx-menacing {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 60px;
+            color: #000;
+            -webkit-text-stroke: 3px #fff;
+            font-family: sans-serif;
+            font-weight: 900;
+            transform: rotate(15deg);
+            opacity: 0.8;
+        }
+
+        /* === RIGHT PANEL: LOGIN FORM === */
+        .panel-form {
+            flex: 1;
+            padding: 40px;
+            background: #00f0ff; /* Tech Cyan */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Speed lines overlay on form */
+        .panel-form::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: repeating-linear-gradient(90deg, #000 0, #000 1px, transparent 1px, transparent 20px);
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 55px;
+            background: #fff;
+            border: 6px solid #000;
+            box-shadow: 8px 8px 0 #000;
+            padding: 10px;
+            margin: 0 0 20px 0;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Speech Bubble Action Box */
+        .action-bubble {
+            background: #ffe600;
+            border: 4px solid #000;
+            padding: 15px;
+            font-size: 16px;
+            font-family: 'Trebuchet MS', sans-serif;
+            font-weight: bold;
+            box-shadow: 6px 6px 0 #000;
+            clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+            text-align: center;
+            margin-bottom: 35px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .input-group label {
+            background: #000;
+            color: #fff;
+            border: 3px solid #000;
+            padding: 5px 10px;
+            font-size: 18px;
+            position: absolute;
+            top: -15px;
+            left: -10px;
+            z-index: 3;
+            transform: rotate(-2deg);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 20px 15px 15px 15px;
+            font-size: 22px;
+            font-family: 'Trebuchet MS', sans-serif;
+            font-weight: bold;
+            border: 5px solid #000;
+            box-shadow: 6px 6px 0 #000;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.2s;
+            background: #fff;
+        }
+
+        .input-group input:focus {
+            background: #ffe600;
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 #000;
+        }
+
+        /* Massive Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 35px;
+            background: #ff003c;
+            color: #fff;
+            border: 6px solid #000;
+            box-shadow: 10px 10px 0 #000;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-family: 'Impact', sans-serif;
+            margin-top: 10px;
+            transition: all 0.1s;
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-btn:hover {
+            background: #fff;
+            color: #ff003c;
+        }
+
+        .login-btn:active {
+            transform: translate(10px, 10px);
+            box-shadow: 0px 0px 0 #000;
+        }
+
+        /* Small link back */
+        .forgot-link {
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Trebuchet MS', sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+            position: relative;
+            z-index: 2;
+        }
+        .forgot-link a {
+            color: #000;
+            text-decoration: none;
+            border-bottom: 2px solid #000;
+        }
+        .forgot-link a:hover {
+            background: #000;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="panel-art">
+            <div style="background: #fff; border: 6px solid #000; box-shadow: 10px 10px 0 #000; padding: 10px; margin-bottom: 20px; transform: rotate(-5deg);">
+                <img src="logo.png" alt="Nexora Logo" style="width: 130px; display: block;">
+            </div>
+            <div class="art-title" style="margin-bottom: 20px; transform: skew(-10deg) rotate(-2deg);">NEXORA TECH</div>
+            <div class="art-danger">RESTRICTED<br>AREA</div>
+            <div class="sfx-menacing">ゴゴゴゴ</div>
+        </div>
+
+        <!-- FORM ACTION NOW LINKS TO THE DEDICATED DASHBOARD -->
+        <form class="panel-form" action="wareshop_dashboard.html">
+            
+            <h1>SYSTEM ACCESS</h1>
+            
+            <div class="action-bubble">
+                "STOP ASAN ID ANG MO?"
+            </div>
+
+            <div class="input-group">
+                <label>STAFF ID</label>
+                <input type="text" placeholder="ENTER CREDENTIALS..." required>
+            </div>
+            
+            <div class="input-group">
+                <label>PASSCODE</label>
+                <input type="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="login-btn">AUTHORIZE LOGIN</button>
+            </div>
+        </form>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora Warehouse - Command Dashboard</title>
+    <style>
+        /* === MANGA BASE STYLES === */
+        body {
+            margin: 0;
+            padding: 40px;
+            background-color: #1a1a24;
+            background-image: repeating-linear-gradient(45deg, #111 0, #111 2px, #1a1a24 2px, #1a1a24 15px);
+            font-family: 'Impact', 'Trebuchet MS', sans-serif;
+            text-transform: uppercase;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            color: #000;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 1300px;
+            background: #fff;
+            border: 8px solid #000;
+            box-shadow: 25px 25px 0 rgba(0,0,0,0.8), 0 0 50px rgba(255, 230, 0, 0.2);
+            padding: 40px;
+            position: relative;
+            transform: rotate(-1deg);
+        }
+
+        /* Screentone Background Overlay */
+        .dashboard-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(#000 20%, transparent 20%);
+            background-size: 8px 8px;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        /* === HEADER BANNER === */
+        .header-banner {
+            background: #ffe600; /* Cyber Yellow */
+            border: 6px solid #000;
+            box-shadow: 10px 10px 0 #000;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            transform: skew(-2deg);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header-banner h1 {
+            margin: 0;
+            font-size: 55px;
+            line-height: 1;
+            text-shadow: 3px 3px 0 #fff;
+        }
+        
+        .header-banner p {
+            margin: 0;
+            font-family: 'Trebuchet MS', sans-serif;
+            font-weight: bold;
+            font-size: 20px;
+            color: #ff003c;
+        }
+
+        /* === MASSIVE STATS GRID === */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-card {
+            border: 6px solid #000;
+            box-shadow: 10px 10px 0 #000;
+            padding: 30px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .stat-card:hover {
+            transform: translate(-5px, -5px) scale(1.02);
+            box-shadow: 15px 15px 0 #000;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: repeating-linear-gradient(45deg, #000 0, #000 2px, transparent 2px, transparent 15px);
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .stat-title {
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 5px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-number {
+            font-size: 80px;
+            font-family: 'Impact', sans-serif;
+            color: #fff;
+            -webkit-text-stroke: 4px #000;
+            text-shadow: 8px 8px 0 #000;
+            position: relative;
+            z-index: 2;
+            line-height: 1;
+        }
+
+        /* Card Colors */
+        .sc-1 { background: #00f0ff; } /* Cyan */
+        .sc-2 { background: #ffe600; } /* Yellow */
+        .sc-3 { background: #ff003c; color: #fff; } /* Red */
+        .sc-4 { background: #00ff66; } /* Green */
+        .sc-3 .stat-title { border-color: #fff; }
+
+        /* === BOTTOM SECTION === */
+        .bottom-section {
+            display: flex;
+            gap: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Activity Log Panel */
+        .activity-log {
+            flex: 2;
+            border: 6px solid #000;
+            box-shadow: 10px 10px 0 #000;
+            background: #fff;
+            padding: 20px;
+        }
+
+        .activity-log h2 {
+            margin: 0 0 15px 0;
+            font-size: 30px;
+            background: #000;
+            color: #fff;
+            padding: 10px;
+            display: inline-block;
+            transform: skew(-5deg);
+        }
+
+        .log-list {
+            list-style: none;
+            padding: 0; margin: 0;
+            font-family: 'Trebuchet MS', sans-serif;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .log-list li {
+            border-bottom: 3px dashed #ccc;
+            padding: 15px 5px;
+            display: flex;
+            gap: 15px;
+        }
+        .log-time { color: #ff003c; }
+
+        /* Action Panel */
+        .action-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: flex-end;
+        }
+
+        /* Massive Link to Book UI */
+        .btn-database {
+            background: #ff003c;
+            color: #fff;
+            border: 6px solid #000;
+            box-shadow: 10px 10px 0 #000;
+            padding: 30px 20px;
+            font-size: 35px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+        }
+
+        .btn-database:hover {
+            background: #ffe600;
+            color: #000;
+            transform: translate(-5px, -5px) scale(1.02);
+            box-shadow: 15px 15px 0 #000;
+        }
+
+        .sfx {
+            position: absolute;
+            font-size: 80px;
+            color: #00f0ff;
+            -webkit-text-stroke: 3px #000;
+            z-index: 10;
+            transform: rotate(-15deg);
+            right: -20px;
+            bottom: -20px;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <div class="sfx">ドドドド</div>
+
+        <!-- HEADER -->
+        <div class="header-banner">
+            <div style="display: flex; align-items: center; gap: 25px;">
+                <img src="logo.png" alt="Nexora Logo" style="width: 90px; mix-blend-mode: multiply;">
+                <div>
+                    <h1>NEXORA TECH DASHBOARD CENTER</h1>
+                    <p>SYSTEM OVERVIEW</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS GRID -->
+        <div class="stats-grid">
+            <div class="stat-card sc-1">
+                <div class="stat-title">TOTAL STOCK</div>
+                <div class="stat-number">300</div>
+            </div>
+            <div class="stat-card sc-2">
+                <div class="stat-title">PENDING ORDERS</div>
+                <div class="stat-number">69</div>
+            </div>
+            <div class="stat-card sc-3">
+                <div class="stat-title">DEFECT</div>
+                <div class="stat-number">11</div>
+            </div>
+            <div class="stat-card sc-4">
+                <div class="stat-title">LOW STOCK</div>
+                <div class="stat-number">23</div>
+            </div>
+        </div>
+
+        <!-- BOTTOM SECTION -->
+        <div class="bottom-section">
+            <div class="activity-log">
+                <h2>SYSTEM LOGS</h2>
+                <ul class="log-list">
+                    <li><span class="log-time">[10:42 AM]</span> <span>Delivery received at Cargo Bay 4 (OLED Monitors).</span></li>
+                    <li><span class="log-time">[10:15 AM]</span> <span>WARNING: Cherry MX Red Switches stock depleted!</span></li>
+                    <li><span class="log-time">[09:05 AM]</span> <span>Order #8843 shipped successfully.</span></li>
+                </ul>
+            </div>
+            
+            <div class="action-panel">
+                <!-- LINK TO THE MANGA BOOK UI -->
+                <a href="wareshop_manga.html" class="btn-database">
+                    ACCESS DATABASE<br>
+                    <span style="font-size: 20px; font-family: 'Trebuchet MS';">(OPEN MODULES)</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
